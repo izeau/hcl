@@ -5,6 +5,7 @@ package hclwrite
 
 import (
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	"github.com/zclconf/go-cty/cty"
 )
 
 type Attribute struct {
@@ -44,6 +45,22 @@ func (a *Attribute) init(name string, expr *Expression) {
 			Bytes: []byte{'\n'},
 		},
 	})
+}
+
+func (a *Attribute) SetName(name string) {
+	nameTok := newIdentToken(name)
+	nameObj := newIdentifier(nameTok)
+	a.name.ReplaceWith(nameObj)
+}
+
+func (a *Attribute) SetExprRaw(tokens Tokens) {
+	expr := NewExpressionRaw(tokens)
+	a.expr = a.expr.ReplaceWith(expr)
+}
+
+func (a *Attribute) SetExprValue(val cty.Value) {
+	expr := NewExpressionLiteral(val)
+	a.expr = a.expr.ReplaceWith(expr)
 }
 
 func (a *Attribute) Expr() *Expression {

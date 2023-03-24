@@ -251,11 +251,11 @@ func (b *Body) SetAttributeLineComment(name string, lineComment string) *Attribu
 // SetAttributeTraversal.
 func (b *Body) SetAttributeRaw(name string, tokens Tokens) *Attribute {
 	attr := b.GetAttribute(name)
-	expr := NewExpressionRaw(tokens)
 	if attr != nil {
-		attr.expr = attr.expr.ReplaceWith(expr)
+		attr.SetExprRaw(tokens)
 	} else {
 		attr := newAttribute()
+		expr := NewExpressionRaw(tokens)
 		attr.init(name, expr)
 		b.appendItem(attr)
 	}
@@ -272,11 +272,11 @@ func (b *Body) SetAttributeRaw(name string, tokens Tokens) *Attribute {
 // created.
 func (b *Body) SetAttributeValue(name string, val cty.Value) *Attribute {
 	attr := b.GetAttribute(name)
-	expr := NewExpressionLiteral(val)
 	if attr != nil {
-		attr.expr = attr.expr.ReplaceWith(expr)
+		attr.SetExprValue(val)
 	} else {
 		attr := newAttribute()
+		expr := NewExpressionLiteral(val)
 		attr.init(name, expr)
 		b.appendItem(attr)
 	}
